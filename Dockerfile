@@ -5,10 +5,14 @@ FROM registry.access.redhat.com/ubi8/ubi:latest as build
 # cache mounts below may already exist and owned by root
 USER root
 
-# Install Rust
-RUN yum groupinstall 'Development Tools' -y && yarn install gcc gcc-c++ kernel-devel make -y && \
+# Install Rust and setup environment
+RUN yum groupinstall 'Development Tools' -y && yum install gcc gcc-c++ kernel-devel make -y && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs && \
-    sh ./sh.rustup.rs -y
+    sh ./sh.rustup.rs -y && \
+    curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protoc-26.1-linux-s390_64.zip && \
+    unzip protoc-26.1-linux-s390_64.zip && \
+    ln -s /root/bin/protoc /usr/bin/protoc
+
 
 # Update PATH    
 ENV PATH="/root/.cargo/bin:$PATH"
