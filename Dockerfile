@@ -6,8 +6,8 @@ FROM registry.access.redhat.com/ubi8/ubi:latest as build
 USER root
 
 # Install Rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs \
-    sh ./sh.rustup.rs -y \
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs && \
+    sh ./sh.rustup.rs -y && \
     source .cargo/env
 
 # Build influxdb3
