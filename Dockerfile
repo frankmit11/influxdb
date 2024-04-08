@@ -10,7 +10,9 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs &&
     sh ./sh.rustup.rs -y
 
 # Update PATH    
-ENV PATH="$HOME/.cargo/bin:$PATH"
+ENV PATH="/root/.cargo/bin:$PATH"
+
+#RUN env | grep PATH
 
 # Verify Cargo Verison
 RUN cargo --version
