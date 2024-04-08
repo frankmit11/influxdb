@@ -11,6 +11,7 @@ RUN yum groupinstall 'Development Tools' -y && yum install gcc gcc-c++ kernel-de
     sh ./sh.rustup.rs -y && \
     curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protoc-26.1-linux-s390_64.zip && \
     unzip protoc-26.1-linux-s390_64.zip && \
+    rm /usr/bin/protoc && \
     ln -s /root/bin/protoc /usr/bin/protoc
 
 
