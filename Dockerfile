@@ -21,7 +21,7 @@ ENV PATH="/root/.cargo/bin:$PATH"
 #RUN env | grep PATH
 
 # Verify Cargo Verison
-RUN cargo --version
+RUN cargo --version && protoc --version
 
 # Build influxdb3
 COPY . /influxdb3
