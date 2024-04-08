@@ -1,13 +1,12 @@
 #syntax=docker/dockerfile:1.2
-ARG RUST_VERSION=1.75
-FROM rust:${RUST_VERSION}-slim-bookworm as build
+# ARG RUST_VERSION=1.75
+FROM registry.access.redhat.com/ubi8/ubi:latest as build
+
 
 # cache mounts below may already exist and owned by root
 USER root
 
-RUN apt update \
-    && apt install --yes binutils build-essential pkg-config libssl-dev clang lld git protobuf-compiler \
-    && rm -rf /var/lib/{apt,dpkg,cache,log}
+RUN yum install -y rust-toolset
 
 # Build influxdb3
 COPY . /influxdb3
