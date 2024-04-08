@@ -2,11 +2,13 @@
 # ARG RUST_VERSION=1.75
 FROM registry.access.redhat.com/ubi8/ubi:latest as build
 
-
 # cache mounts below may already exist and owned by root
 USER root
 
-RUN yum install -y rust-toolset
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs \
+    sh ./sh.rustup.rs -y \
+    source .cargo/env
 
 # Build influxdb3
 COPY . /influxdb3
