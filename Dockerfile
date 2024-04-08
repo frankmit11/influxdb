@@ -6,7 +6,8 @@ FROM registry.access.redhat.com/ubi8/ubi:latest as build
 USER root
 
 # Install Rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs && \
+RUN yum groupinstall 'Development Tools' -y && yarn install gcc gcc-c++ kernel-devel make -y && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs && \
     sh ./sh.rustup.rs -y
 
 # Update PATH    
