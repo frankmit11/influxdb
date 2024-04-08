@@ -8,7 +8,9 @@ USER root
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs && \
     sh ./sh.rustup.rs -y && \
-    source .cargo/env
+    source $HOME/.cargo/env && \ 
+    cargo --version
+
 
 # Build influxdb3
 COPY . /influxdb3
