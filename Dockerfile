@@ -11,7 +11,7 @@ RUN yum groupinstall 'Development Tools' -y && \
     sh ./sh.rustup.rs -y && \
     curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protoc-26.1-linux-s390_64.zip && \
     unzip protoc-26.1-linux-s390_64.zip && \
-    cp -r /root/include/google/ /usr/include
+    cp -r /root/include/google /usr/include
 
 
 # Update PATH    
