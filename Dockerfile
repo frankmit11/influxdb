@@ -6,21 +6,20 @@ FROM registry.access.redhat.com/ubi8/ubi:latest as build
 USER root
 
 # Install Rust and setup environment
-RUN yum groupinstall 'Development Tools' -y && yum install gcc gcc-c++ kernel-devel make -y && \
+RUN yum groupinstall 'Development Tools' -y && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs && \
     sh ./sh.rustup.rs -y && \
     curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protoc-26.1-linux-s390_64.zip && \
     unzip protoc-26.1-linux-s390_64.zip && \
-    rm /usr/bin/protoc && \
-    ln -s /root/bin/protoc /usr/bin/protoc
+    cp -r /root/include/google/ /usr/include
 
 
 # Update PATH    
-ENV PATH="/root/.cargo/bin:$PATH"
+ENV PATH="/root/.cargo/bin:/root/bin/protoc:$PATH"
 
 #RUN env | grep PATH
 
-# Verify Cargo Verison
+# Verify Cargo and Protoc Compiler Verison
 RUN cargo --version && protoc --version
 
 # Build influxdb3
