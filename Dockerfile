@@ -4,6 +4,7 @@ FROM registry.access.redhat.com/ubi8/ubi:latest as build
 
 # cache mounts below may already exist and owned by root
 USER root
+WORKDIR /root/
 
 # Install Rust and setup environment
 RUN yum groupinstall 'Development Tools' -y && \
