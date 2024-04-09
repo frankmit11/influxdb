@@ -19,8 +19,6 @@ RUN yum groupinstall 'Development Tools' -y && \
 # Update PATH    
 ENV PATH="/root/.cargo/bin:$PATH"
 
-#RUN env | grep PATH
-
 # Verify Cargo and Protoc Compiler Verison
 RUN cargo --version && protoc --version
 
