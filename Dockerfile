@@ -1,0 +1,56 @@
+FROM registry.access.redhat.com/ubi8/ubi:latest as build
+
+# cache mounts below may already exist and owned by root
+USER root
+WORKDIR /root/
+
+# Set Go ENV VAR
+ENV GO111MODULE=on
+
+# Install Rust and Setup environment
+RUN yum update -y && \
+    yum groupinstall 'Development Tools' -y && \
+    yum install bison clang golang protobuf -y && \ 
+    bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer) && \
+    source /root/.gvm/scripts/gvm && \
+    gvm install go1.18 && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs && \
+    sh ./sh.rustup.rs -y && \
+    curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protoc-26.1-linux-s390_64.zip && \
+    unzip protoc-26.1-linux-s390_64.zip && \
+    cp -r /root/include/google /usr/include && \
+    ln -s /root/bin/protoc /usr/bin/protoc
+
+# Update PATH    
+ENV PATH="/root/.cargo/bin:$PATH"
+
+# Verify Cargo and Protoc Compiler Verison
+RUN cargo --version && protoc --version
+
+# Build influxdb2
+RUN git clone https://github.com/influxdata/influxdb.git && \
+    git checkout v2.7.5 && \ 
+    make
+      
+FROM debian:bookworm-slim AS dependency-base
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update \
+    && apt-get install -y \
+    ca-certificates \
+    tzdata \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}
+
+# NOTE: We separate these two stages so we can run the above
+# quickly in CI, in case of flaky failure.
+FROM dependency-base
+
+EXPOSE 8086
+
+COPY --from=build /root/influxdb/cmd/influxd /usr/bin/influxd
+COPY --from=build /root/influxdb/docker/influxd/entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["influxd"]
