@@ -11,7 +11,9 @@ ENV GO111MODULE=on
 RUN yum update -y && \
     yum groupinstall 'Development Tools' -y && \
     yum install bison clang golang protobuf -y && \ 
-    bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer) && \
+    curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer >> gvminstall.sh && \
+    chmod +x /root/gvminstall.sh && \
+    bash /root/gvminstall.sh && \
     source /root/.gvm/scripts/gvm && \
     gvm install go1.18 && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs && \
