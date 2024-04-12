@@ -1,13 +1,14 @@
+# Use RedHat UBI Image
 FROM registry.access.redhat.com/ubi8/ubi:latest as build
 
-# cache mounts below may already exist and owned by root
+# Setup root
 USER root
 WORKDIR /root/
 
 # Set Go ENV VAR
 ENV GO111MODULE=on
 
-# Install Rust and Setup environment
+# Setup environment for influx build environment
 RUN yum update -y && \
     yum groupinstall 'Development Tools' -y && \
     yum install bison clang golang protobuf -y && \ 
@@ -29,12 +30,18 @@ ENV PATH="/root/.cargo/bin:$PATH"
 # Verify Cargo and Protoc Compiler Verison
 RUN cargo --version && protoc --version
 
-# Build influxdb2
-RUN git clone https://github.com/influxdata/influxdb.git && \
-    git checkout v2.7.5 && \ 
+# Clone Influx Git repo
+RUN git clone https://github.com/influxdata/influxdb.git
+
+# Move to Influx Git dir
+WORKDIR /root/influxdb/
+
+# Build Influx v2.7.5
+RUN git checkout v2.7.5 && \ 
     make
       
 FROM quayreg1.fpet.pokprv.stglabs.ibm.com/fmitaro/debian:bookworm-slim AS dependency-base
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
