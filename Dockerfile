@@ -5,9 +5,6 @@ FROM registry.access.redhat.com/ubi8/ubi:latest as build
 USER root
 WORKDIR /root/
 
-# Set Go ENV VAR
-ENV GO111MODULE=on
-
 # Setup environment for influx build environment
 RUN yum update -y && \
     yum groupinstall 'Development Tools' -y && \
@@ -26,8 +23,19 @@ RUN yum update -y && \
     cp -r /root/include/google /usr/include && \
     ln -s /root/bin/protoc /usr/bin/protoc
 
-# Update PATH    
-ENV PATH="/root/.cargo/bin:$PATH"
+# Set ENV vars    
+ENV PATH="/root/.gvm/pkgsets/go1.18/global/bin:/root/.gvm/gos/go1.18/bin:/root/.gvm/pkgsets/go1.18/global/overlay/bin:/root/.gvm/bin:/root/.cargo/bin:$PATH"
+ENV LD_LIBRARY_PATH=/root/.gvm/pkgsets/go1.18/global/overlay/lib
+ENV DYLD_LIBRARY_PATH=/root/.gvm/pkgsets/go1.18/global/overlay/lib
+ENV GOPATH=/root/.gvm/pkgsets/go1.18/global
+ENV PKG_CONFIG_PATH=/root/.gvm/pkgsets/go1.18/global/overlay/lib/pkgconfig:
+ENV GVM_PATH_BACKUP=/root/.gvm/bin:/root/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV gvm_go_name=go1.18
+ENV gvm_pkgset_name=global
+ENV GVM_ROOT=/root/.gvm
+ENV GO111MODULE=on
+ENV GOROOT=/root/.gvm/gos/go1.18
+ENV GVM_OVERLAY_PREFIX=/root/.gvm/pkgsets/go1.18/global/overlay
 
 # Verify Cargo and Protoc Compiler Verison
 RUN cargo --version && protoc --version
