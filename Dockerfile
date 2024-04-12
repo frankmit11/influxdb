@@ -68,7 +68,7 @@ FROM dependency-base
 
 EXPOSE 8086
 
-COPY --from=build /root/influxdb/cmd/influxd /usr/bin/influxd
+COPY --from=build /root/influxdb/cmd/influxd /usr/bin/
 COPY --from=build /root/influxdb/docker/influxd/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
