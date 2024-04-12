@@ -32,7 +32,7 @@ RUN git clone https://github.com/influxdata/influxdb.git && \
     git checkout v2.7.5 && \ 
     make
       
-FROM debian:bookworm-slim AS dependency-base
+FROM quayreg1.fpet.pokprv.stglabs.ibm.com/fmitaro/debian:bookworm-slim AS dependency-base
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
