@@ -17,6 +17,8 @@ RUN yum update -y && \
     bash /root/gvminstall.sh && \
     source /root/.gvm/scripts/gvm && \
     gvm install go1.18 && \
+    gvm use go1.18 --default && \
+    go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28 && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> sh.rustup.rs && \
     sh ./sh.rustup.rs -y && \
     curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protoc-26.1-linux-s390_64.zip && \
