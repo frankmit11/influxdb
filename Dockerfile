@@ -1,5 +1,5 @@
 # Use RedHat UBI Image
-FROM registry.access.redhat.com/ubi8/ubi:latest as build
+FROM quayreg1.fpet.pokprv.stglabs.ibm.com/hcit-performance-monitoring/ubi8:8.10 as build
 
 # Setup root
 USER root
@@ -50,7 +50,7 @@ WORKDIR /root/influxdb/
 RUN git checkout v2.7.5 && \ 
     make
       
-FROM quayreg1.fpet.pokprv.stglabs.ibm.com/fmitaro/debian:bookworm-slim AS dependency-base
+FROM quayreg1.fpet.pokprv.stglabs.ibm.com/hcit-performance-monitoringtaro/debian:bookworm-slim AS dependency-base
 
 ENV DEBIAN_FRONTEND noninteractive
 
